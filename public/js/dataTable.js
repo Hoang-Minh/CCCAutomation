@@ -38,7 +38,7 @@ export default function getTestInfo(url){
             var testLink = link + ids[i];
             values += "<a href='" +  testLink + "' target='_blank'>" + ids[i] + "</a>" + " ";
         }
-        console.log("concat: " + values);
+                
         return values;
     }
 }
