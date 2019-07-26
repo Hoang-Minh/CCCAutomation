@@ -23,22 +23,27 @@ export default function getTestInfo(url){
             },
             {
                 data: "description"
-            }]
-    });
+            }],
+        drawCallback: function(settings){
+            let index = url.lastIndexOf("/");                  
+            let activeItem = url.substring(index + 1);            
+            $("#" + activeItem).addClass("active");
+        }
+    });    
 
     function displayIds(ids) {
-        var link = "https://cccone.visualstudio.com/CCC%20ONE/_workitems/edit/";
-        var values = "";
+        let link = "https://cccone.visualstudio.com/CCC%20ONE/_workitems/edit/";
+        let values = "";
 
-        for (var i = 0; i < ids.length; i++) {
+        for (let i = 0; i < ids.length; i++) {
             if (ids[i] === "") {
                 return "MISSING";
             }
 
-            var testLink = link + ids[i];
+            let testLink = link + ids[i];
             values += "<a href='" +  testLink + "' target='_blank'>" + ids[i] + "</a>" + " ";
         }
-                
+
         return values;
     }
 }
