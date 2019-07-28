@@ -17,8 +17,4 @@
     </table>
 </div>
 
-<% if(type === "ios"){ %>
-    <% include table/iosFooter %>
-<%} else {%>
-    <% include table/androidFooter %>
-<%} %> 
+<%- include("table/footer", {data: file}) %>
