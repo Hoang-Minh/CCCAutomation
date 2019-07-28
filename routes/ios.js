@@ -5,7 +5,8 @@ router.get("/", (req, res) => {
     res.render("partials/table", 
     {
         type: "ios",
-        url: "https://ccconeiosautomationtest.azurewebsites.net/api/testinfo/ios"
+        url: process.env.API_IOS,
+        edit: process.env.EDIT_TEST
     });
 });
 

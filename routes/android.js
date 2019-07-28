@@ -5,7 +5,8 @@ router.get("/", (req, res) => {
     res.render("partials/table", 
     {
         type: "android",
-        url: "https://ccconeandroidautomationtest.azurewebsites.net/api/testinfo/android"
+        url: process.env.API_ANDROID,
+        edit: process.env.EDIT_TEST
     });
 });
 

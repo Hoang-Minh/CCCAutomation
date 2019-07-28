@@ -1,6 +1,7 @@
 <script>
 $(document).ready(function(){       
     let url = <%- JSON.stringify(url) %>;
+    let edit = <%- JSON.stringify(edit) %>;
 
     $("#tests").DataTable({
     ajax: {
@@ -34,8 +35,7 @@ $(document).ready(function(){
     }
 });    
 
-function displayIds(ids) {
-    let link = "https://cccone.visualstudio.com/CCC%20ONE/_workitems/edit/";
+function displayIds(ids) {    
     let values = "";
 
     for (let i = 0; i < ids.length; i++) {
@@ -43,8 +43,8 @@ function displayIds(ids) {
             return "MISSING";
         }
 
-        let testLink = link + ids[i];
-        values += "<a href='" +  testLink + "' target='_blank'>" + ids[i] + "</a>" + " ";
+        let editTestLink = edit + ids[i];
+        values += "<a href='" +  editTestLink + "' target='_blank'>" + ids[i] + "</a>" + " ";
     }
 
     return values;
