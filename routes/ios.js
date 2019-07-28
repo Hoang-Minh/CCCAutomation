@@ -5,7 +5,7 @@ router.get("/", (req, res) => {
     res.render("partials/table", 
     {
         type: "ios",
-        file: "/js/iosTable.js"
+        url: "https://ccconeiosautomationtest.azurewebsites.net/api/testinfo/ios"
     });
 });
 

@@ -5,7 +5,7 @@ router.get("/", (req, res) => {
     res.render("partials/table", 
     {
         type: "android",
-        file: "/js/androidTable.js"
+        url: "https://ccconeandroidautomationtest.azurewebsites.net/api/testinfo/android"
     });
 });
 
