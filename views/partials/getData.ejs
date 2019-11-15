@@ -3,7 +3,7 @@ $(document).ready(function(){
     let url = <%- JSON.stringify(url) %>;
     let edit = <%- JSON.stringify(edit) %>;
 
-    $("#tests").DataTable({
+    let table = $("#tests").DataTable({
     ajax: {
         url: url,
         dataSrc: ""
@@ -33,21 +33,41 @@ $(document).ready(function(){
         let activeItem = url.substring(index + 1);            
         $("#" + activeItem).addClass("active");
     }
+        
 });    
 
-function displayIds(ids) {    
-    let values = "";
+    // $("input").on('keyup', function() {
+        
+    //     let val = $(this).val();
 
-    for (let i = 0; i < ids.length; i++) {
-        if (ids[i] === "") {
-            return "MISSING";
+    //     if(!isNaN(val)){
+    //         // combine search into two columns
+    //         let regExSearch = "^(" + val + ")"; // works 
+        
+
+    //         // table.column(2).search(regExSearch, true, false);
+    //         table.column(1).search(regExSearch, true, false).draw();
+        
+        
+        
+    //     } else {
+    //         table.search(val, false, true).draw();
+    //     }
+    // });
+
+    function displayIds(ids) {    
+        let values = "";
+
+        for (let i = 0; i < ids.length; i++) {
+            if (ids[i] === "") {
+                return "MISSING";
+            }
+
+            let editTestLink = edit + ids[i];
+            values += "<a href='" +  editTestLink + "' target='_blank'>" + ids[i] + "</a>" + " ";
         }
 
-        let editTestLink = edit + ids[i];
-        values += "<a href='" +  editTestLink + "' target='_blank'>" + ids[i] + "</a>" + " ";
-    }
-
-    return values;
-}
+        return values;
+    }    
 });
 </script>
