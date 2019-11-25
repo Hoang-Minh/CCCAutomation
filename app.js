@@ -5,13 +5,14 @@ const bodyParser = require("body-parser");
 const indexRoutes = require("./routes/index");
 const iosRoutes = require("./routes/ios");
 const androidRoutes = require("./routes/android");
-const cors = require("cors");
+const request = require("request");
+//const cors = require("cors");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-app.use(cors());
+//app.use(cors());
 
 // app.use(indexRoutes);
 // app.use("/ios", iosRoutes);
@@ -238,6 +239,43 @@ app.get("/workitems/:id", (req, res) => {
     
 //     res.sendStatus(200);    
 // });
+
+app.get("/:planId/testsuites", (req, res) => {
+    let planId = req.params.planId;
+    console.log(planId);
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + req.params.planId + "/suites?api-version=5.0-preview.2";
+
+    console.log(url);   
+    
+
+    request.get(url, (error, response, body) => {
+        if(error){
+            console.log(error);            
+        }
+
+        console.log(response.statusCode);
+        let jsonBody = JSON.parse(body);
+        let arr = jsonBody.value;
+        //console.log(arr);
+        //inheritDefaultConfigurations
+
+        let minh = arr.filter(x => x.inheritDefaultConfigurations === false && x.testCaseCount === 0 && x.hasOwnProperty("parent"));
+        console.log(minh);
+
+        minh.forEach(element => {
+            console.log(element);
+            let m = JSON.parse(element);
+        });
+
+        
+
+        // var t = arr.filter(x => t.inheritDefaultConfigurations === false);
+        
+    })
+
+});
+
+
 
 app.listen(port, function(){
     console.log("server is up at " + port);
