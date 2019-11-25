@@ -319,36 +319,94 @@ app.get("/:planId/testsuites", async (req, res) => {
 
     console.log(req.params.planId);
 
-    GetParentTestSuite(req.params.planId);
+    // test plan needs to execute
+    let allTestSuites = JSON.parse(await GetAllTestSuitesInTestPlan(req.params.planId)).value;
 
+    let parentTestSuite = allTestSuites.find(x => x.inheritDefaultConfigurations === false 
+        && x.testCaseCount === 0 && !x.hasOwnProperty("parent"));
+
+    // ios must test plan
+    let allTestSuitesInIosMustTest = JSON.parse(await GetAllTestSuitesInTestPlan(80002)).value;
+
+    let testsuitesInIosMustTest = allTestSuitesInIosMustTest
+                                        .filter(x => x.inheritDefaultConfigurations === false 
+                                            && x.testCaseCount === 0 
+                                            && x.hasOwnProperty("parent")
+                                            && x.name.includes("LocalLab"));
+
+    let localIphone7TestSuiteId = testsuitesInIosMustTest.find(x => x.name.includes("7")).id;
+    let localIphone6TestSuiteId = testsuitesInIosMustTest.find(x => x.name.includes("6")).id;
+
+    let localIphone7TestSuiteIds = allTestSuitesInIosMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone7TestSuiteId);
+
+    let localIphone6TestSuiteIds = allTestSuitesInIosMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone6TestSuiteId);        
+
+
+    localIphone7TestSuiteIds.forEach(async suite => {
+        let url1 = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + 80002 + "/suites/" + suite.id + "/testcases?api-version=5.0-preview.2";
+
+        let requestPromise = util.promisify(request);
+        let response = await requestPromise(url1);
+
+        let body = JSON.parse(response.body).value;
+
+        let testCases = body.map(x => {
+            return x.testCase.id;
+        })
+
+        let testCasesWithComma = testCases.join(",");
+        // let val = body.value;
+
+        let rObj = {};
+        rObj["name"] = suite.name;
+        rObj["ids"] = testCasesWithComma;
+
+        console.log(rObj);
+
+    });
+
+    let id7 = localIphone7TestSuiteIds.map(y => {
+        let rObj = {};
+        rObj["id"] = y.id;
+        rObj["name"] = y.name;
+        return rObj;
+    });
+
+    let id6 = localIphone6TestSuiteIds.map(y => {
+        let rObj = {};
+        rObj["id"] = y.id;
+        rObj["name"] = y.name;
+        return rObj;
+    });
+    
 });
 
-// function GetTestCases(arr, planId){
+function GetTestCasesInATestSuite(arr, planId){
     
-//     arr.forEach(x => {
-//         console.log(x.id);
-//         console.log(x.name);
+    arr.forEach(x => {
+        console.log(x.id);
+        console.log(x.name);
         
-//         let url1 = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/" + x.id + "/testcases?api-version=5.0-preview.2";
+        let url1 = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/" + x.id + "/testcases?api-version=5.0-preview.2";
 
-//         request.get(url1, (error, response, body) => {
-//             console.log(url1);
+        request.get(url1, (error, response, body) => {
+            console.log(url1);
 
-//             if(error){
-//                 console.log(error);
-//             }
+            if(error){
+                console.log(error);
+            }
 
-//             console.log(response.statusCode);
+            console.log(response.statusCode);
 
-//             let tests = JSON.parse(body).value;
+            let tests = JSON.parse(body).value;
             
-//             tests.forEach(y => {
-//                 console.log(y.testCase.id);
-//             });
+            tests.forEach(y => {
+                console.log(y.testCase.id);
+            });
             
-//         });
-//     });
-// }
+        });
+    });
+}
 
 // app.post("/:planId/newTestSuite", async (req, res) => {
 //     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + req.params.planId + "/suites?api-version=5.0";
@@ -371,31 +429,23 @@ app.get("/:planId/testsuites", async (req, res) => {
 // })
 
 async function GetParentTestSuite(id){
-    let testSuites = await GetAllTestSuitesInTestPlan(id);
+    let testSuitesObj = await GetAllTestSuitesInTestPlan(id);
+    let testSuites = JSON.parse(testSuitesObj).value;
 
-    let parentTestSuite = testSuites
-                        .find(x => x.inheritDefaultConfigurations === false 
+    return testSuites.find(x => x.inheritDefaultConfigurations === false 
                             && x.testCaseCount === 0 && !x.hasOwnProperty("parent"));
-    console.log("Parent Test Suite id: " + parentTestSuite.id);
-    console.log("Parent Test Suite name: " + parentTestSuite.name);
-
-    
-
-    
 }
 
 async function GetAllTestSuitesInTestPlan(id){
     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + id + "/suites?api-version=5.0-preview.2";
 
-    return new Promise(function(resolve, reject){
-        request.get(url, async (error, response, body) => {
-            if(!error && res.statusCode == 200){
-                resolve(body);
-            } else {
-                reject(error);
-            }
-        });
-    });
+    let requestPromise = util.promisify(request);
+    let response = await requestPromise(url);
+
+    return response.body;
+}
+
+function CreateTestSuites(){
 
 }
 
