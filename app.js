@@ -434,13 +434,20 @@ async function GetAllTestCasesInATestSuite(suite){
 
 function CreateTestSuites(planId, suiteName){
     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites?api-version=5.0";
-
+    console.log(url);
     // let requestPromise = util.promisify(request);
     // let response = await requestPromise(url);
     // console.log(response.statusCode);    
 
     return new Promise((resolve, reject) => {
-        request.post(url, {
+        request.post({
+            url: url,
+            contentType: "application/json",
+            body: JSON.stringify({
+                "name": suiteName ,
+                "suiteType": "StaticTestSuite"
+            })
+        }, {
             "name": suiteName,
 	        "suiteType": "StaticTestSuite"
         }, (error, response, body) => {
