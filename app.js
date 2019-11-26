@@ -88,253 +88,34 @@ app.get("/workitems/:id", (req, res) => {
 
 });
 
-// app.delete('/workitems/:id', (req, res) => {
-//     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/wit/workitems/" + req.params.id + "?api-version=5.0";
+app.get("/:planId/:mustTestPlanId/testsuites", async (req, res) => {    
 
-//     console.log(url);
-
-//     // request({url: url}, function(error, response, body){
-//     //     if(error){
-//     //         console.log(error);            
-//     //     }
-
-//     //     console.log(response.statusCode);
-//     //     // console.log(body);
-
-//     //     console.log(body);
-        
-        
-        
-        
-//     // });
-//     request.del(url, (error, response, body) => {
-//         if(error){
-//             console.log(error);
-//         }
-
-//         console.log(response.statusCode);
-//         console.log(body);
-//     })
-// });
-
-// app.patch('/workitems/:id', (req, res) => { 
-
-//     let removeItems = [{
-//         op: "add",
-//         path: "/fields/System.AssignedTo",
-//         value: ""
-//     },
-//     {
-//         op: "add",
-//         path: "/fields/System.Title",
-//         value: "[Duplicate]"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomatedTestName"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomatedTestStorage"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomatedTestId"
-//     }
-//     ,
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomationStatus"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.Steps"
-//     },
-//     {
-//         op: "remove",
-//         path: "/relations/0"
-//     }];
-
-
-    
-//     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/wit/workitems/" + req.params.id + "?api-version=5.0";    
-
-//     request.patch(url, 
-//         {
-//             headers: {
-//                 "Content-Type" : "application/json-patch+json"
-//             },
-//             body: JSON.stringify(removeItems)            
-//         }, (error, response, body) => {
-//         if(error){
-//             console.log(error);
-//         }
-
-//         console.log(response.statusCode);
-//         console.log(response.body);
-
-//         res.send('OK');
-//     })
-
-    
-// });
-
-// app.patch('/workitems', (req, res) => { 
-
-//     let removeItems = [{
-//         op: "add",
-//         path: "/fields/System.AssignedTo",
-//         value: ""
-//     },
-//     {
-//         op: "add",
-//         path: "/fields/System.Title",
-//         value: "[Duplicate]"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomatedTestName"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomatedTestStorage"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomatedTestId"
-//     }
-//     ,
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.AutomationStatus"
-//     },
-//     {
-//         op: "remove",
-//         path: "/fields/Microsoft.VSTS.TCM.Steps"
-//     },
-//     {
-//         op: "remove",
-//         path: "/relations/0"
-//     }];
-
-//     ids.forEach((id) => {
-//         let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/wit/workitems/" + id + "?api-version=5.0";    
-//         console.log(url);
-
-//         request.patch(url, 
-//             {
-//                 headers: {
-//                     "Content-Type" : "application/json-patch+json"
-//                 },
-//                 body: JSON.stringify(removeItems)            
-//             }, (error, response, body) => {
-//             if(error){
-//                 console.log(error);
-//             }
-    
-//             if(response.statusCode !== 200){
-//                 console.log(response.statusCode);
-//             }
-//         })
-//     });
-    
-//     res.sendStatus(200);    
-// });
-
-app.get("/:planId/testsuites", async (req, res) => {
-    // let testPlanId = 121428;
-    // let urlFirst = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + req.params.planId + "/suites?api-version=5.0";
-
-    // await request.get(urlFirst, (error, response, body) => {
-    //     if(error){
-    //         console.log(error);
-    //     }
-
-
-    // });
-
-    // let planId = 121428; //req.params.planId;
-    // console.log(planId);
-    // let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites?api-version=5.0-preview.2";
-
-    // console.log(url);   
-    
-
-    // request.get(url, (error, response, body) => {
-    //     if(error){
-    //         console.log(error);            
-    //     }
-
-    //     console.log(response.statusCode);
-    //     let jsonBody = JSON.parse(body);
-    //     let arr = jsonBody.value;      
-        
-    //     let parentTestSuite = arr
-    //                         .find(x => x.inheritDefaultConfigurations === false 
-    //                             && x.testCaseCount === 0 && !x.hasOwnProperty("parent"));
-    //     console.log("Parent Test Suite id: " + parentTestSuite.id);
-    //     console.log("Parent Test Suite name: " + parentTestSuite.name);
-
-    //     let testsuites = arr
-    //                         .filter(x => x.inheritDefaultConfigurations === false 
-    //                             && x.testCaseCount === 0 && x.hasOwnProperty("parent")
-    //                             && x.name.includes("LocalLab"));
-    //     console.log(testsuites);
-
-        
-
-        
-    //     let localIphone7TestSuiteId = testsuites.find(x => x.name.includes("7")).id;
-    //     let localIphone6TestSuiteId = testsuites.find(x => x.name.includes("6")).id;
-
-    //     console.log(localIphone7TestSuiteId);
-    //     console.log(localIphone6TestSuiteId);
-
-    //     let localIphone7TestSuiteIds = arr.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone7TestSuiteId);
-
-    //     let localIphone6TestSuiteIds = arr.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone6TestSuiteId);        
-
-    //     let id7 = localIphone7TestSuiteIds.map(y => {
-    //         let rObj = {};
-    //         rObj["id"] = y.id;
-    //         rObj["name"] = y.name;
-    //         return rObj;
-    //     });
-
-    //     let id6 = localIphone6TestSuiteIds.map(y => {
-    //         let rObj = {};
-    //         rObj["id"] = y.id;
-    //         rObj["name"] = y.name;
-    //         return rObj;
-    //     });
-
-
-        //GetTestCases(id7, req.params.planId);
-
-        
-
-
-        
-    //})
-
-    let automatedTestSuiteName = "Test";
-
-    console.log(req.params.planId);
-
-    await CreateTestSuites(req.params.planId, automatedTestSuiteName);
+    console.log(req.params.planId);    
+    let automatedMustTest = "Automated Must Test";
 
     // test plan needs to execute
     let allTestSuites = JSON.parse(await GetAllTestSuitesInTestPlan(req.params.planId)).value;
 
     let parentTestSuite = allTestSuites.find(x => x.inheritDefaultConfigurations === false 
-        && x.testCaseCount === 0 && !x.hasOwnProperty("parent") && !x.name.includes(automatedTestSuiteName));
+                                && x.testCaseCount === 0 
+                                && !x.hasOwnProperty("parent") 
+                                && !x.name.includes(automatedMustTest));
 
-    let newlyCreatedAutomatedTestSuiteId = allTestSuites.find(x => x.name == automatedTestSuiteName).id;
+    console.log(parentTestSuite.name);
 
+    let pattern = /\d+.\d+/;
+    let version = parentTestSuite.name.match(pattern).join("");
+    console.log(version); 
+
+    let automatedTestSuiteName = "Automated Must Test " + version;
     
+    let newlyCreatedAutomatedTestSuites = await CreateTestSuites(req.params.planId, parentTestSuite.id, automatedTestSuiteName);
 
-    // ios must test plan
-    let allTestSuitesInIosMustTest = JSON.parse(await GetAllTestSuitesInTestPlan(80002)).value;
+    console.log(newlyCreatedAutomatedTestSuites);
+
+    let newlyCreatedAutomatedTestSuite = newlyCreatedAutomatedTestSuites.find(x => x.name == automatedTestSuiteName);
+    
+    let allTestSuitesInIosMustTest = JSON.parse(await GetAllTestSuitesInTestPlan(req.params.mustTestPlanId)).value;
 
     let testsuitesInIosMustTest = allTestSuitesInIosMustTest
                                         .filter(x => x.inheritDefaultConfigurations === false 
@@ -342,62 +123,45 @@ app.get("/:planId/testsuites", async (req, res) => {
                                             && x.hasOwnProperty("parent")
                                             && x.name.includes("LocalLab"));
 
-    let localIphone7TestSuiteId = testsuitesInIosMustTest.find(x => x.name.includes("7")).id;
-    let localIphone6TestSuiteId = testsuitesInIosMustTest.find(x => x.name.includes("6")).id;
+    let localIphone7TestSuite = testsuitesInIosMustTest.find(x => x.name.includes("7"));
+    let localIphone6TestSuite = testsuitesInIosMustTest.find(x => x.name.includes("6"));
 
-    let localIphone7TestSuiteIds = allTestSuitesInIosMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone7TestSuiteId);
+    let localLab7TestSuite = await CreateTestSuites(req.params.planId, newlyCreatedAutomatedTestSuite.id, localIphone7TestSuite.name);
 
-    let localIphone6TestSuiteIds = allTestSuitesInIosMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone6TestSuiteId);        
+    let localLab6TestSuite = await CreateTestSuites(req.params.planId, newlyCreatedAutomatedTestSuite.id, localIphone6TestSuite.name);
 
+    let localIphone7TestSuiteIds = allTestSuitesInIosMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone7TestSuite.id);
 
-    localIphone7TestSuiteIds.forEach(async suite => {
-        // console.log(suite.id);
-        let testCasesInTestSuite = await GetAllTestCasesInATestSuite(suite);
-        
-        // create a new test suite and add test cases
-        console.log(testCasesInTestSuite);
-        
+    let localIphone6TestSuiteIds = allTestSuitesInIosMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == localIphone6TestSuite.id);  
 
+    for(let i = 0; i < localIphone7TestSuiteIds.length; i++){        
 
-    });
+        let testSuites = await CreateTestSuites(req.params.planId, localLab7TestSuite[0].id, localIphone7TestSuiteIds[i].name);
+        console.log(testSuites);
+        let testSuite = testSuites.find(x => x.name == localIphone7TestSuiteIds[i].name);
+        console.log(testSuite);
 
-    // let id7 = localIphone7TestSuiteIds.map(y => {
-    //     let rObj = {};
-    //     rObj["id"] = y.id;
-    //     rObj["name"] = y.name;
-    //     return rObj;
-    // });
+        let testSuiteAndItsTestCases = await GetAllTestCasesInATestSuite(localIphone7TestSuiteIds[i]);
+        console.log(testSuiteAndItsTestCases);
+        console.log("test suite id that tests will be added: " + testSuite.id);
+        console.log("test ids are added into test suite: " + testSuiteAndItsTestCases.ids);
+        await AddTestsIntoATestSuite(testSuite.id, testSuiteAndItsTestCases.ids);        
+    }
 
-    // let id6 = localIphone6TestSuiteIds.map(y => {
-    //     let rObj = {};
-    //     rObj["id"] = y.id;
-    //     rObj["name"] = y.name;
-    //     return rObj;
-    // });
-    
+    for(let i = 0; i < localIphone6TestSuiteIds.length; i++){
+        let testSuites = await CreateTestSuites(req.params.planId, localLab6TestSuite[0].id, localIphone6TestSuiteIds[i].name);
+        console.log(testSuites);
+        let testSuite = testSuites.find(x => x.name == localIphone6TestSuiteIds[i].name);
+        console.log(testSuite);
+
+        let testSuiteAndItsTestCases = await GetAllTestCasesInATestSuite(localIphone6TestSuiteIds[i]);
+        console.log(testSuiteAndItsTestCases);
+        console.log("test suite id that tests will be added: " + testSuite.id);
+        console.log("test ids are added into test suite: " + testSuiteAndItsTestCases.ids);
+        await AddTestsIntoATestSuite(testSuite.id, testSuiteAndItsTestCases.ids);        
+    }
+
 });
-
-
-
-// app.post("/:planId/newTestSuite", async (req, res) => {
-//     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + req.params.planId + "/suites?api-version=5.0";
-
-//     request.post(url, {
-//         body: {
-//             "name": "AutomationTestv1",
-// 	        "suiteType": "StaticTestSuite"
-//         },
-//         json: true
-//     }, (error, response, body) => {
-//         if(error){
-//             console.log(error);
-//         }
-
-//         console.log(response.statusCode);
-//     })
-
-
-// })
 
 async function GetAllTestSuitesInTestPlan(id){
     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + id + "/suites?api-version=5.0-preview.2";
@@ -406,6 +170,35 @@ async function GetAllTestSuitesInTestPlan(id){
     let response = await requestPromise(url);
 
     return response.body;
+}
+
+function CreateTestSuites(planId, parentTestSuite, suiteName){
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/" + parentTestSuite + "?api-version=5.0";
+
+    console.log(url);
+    // let requestPromise = util.promisify(request);
+    // let response = await requestPromise(url);
+    // console.log(response.statusCode);    
+
+    return new Promise((resolve, reject) => {
+        request.post({
+            headers: {
+                "content-type": "application/json"
+            },
+            url: url,
+            body: {
+                "name": suiteName,
+	            "suiteType": "StaticTestSuite"
+            },
+            json: true
+        }, (error, response, body) => {
+            if(!error && response.statusCode == 200) {
+                resolve(body.value);
+            } else {
+                reject(error);
+            }
+        })
+    });
 }
 
 async function GetAllTestCasesInATestSuite(suite){
@@ -432,33 +225,23 @@ async function GetAllTestCasesInATestSuite(suite){
     return rObj;
 }
 
-function CreateTestSuites(planId, suiteName){
-    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/121429?api-version=5.0";
-    console.log(url);
-    // let requestPromise = util.promisify(request);
-    // let response = await requestPromise(url);
-    // console.log(response.statusCode);    
+function AddTestsIntoATestSuite(suiteId, testCasesIds){
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + 80002 + "/suites/" + suiteId + "/testcases/"+ testCasesIds + "?api-version=5.0";
 
     return new Promise((resolve, reject) => {
-        request.post({
-            headers: {
-                "content-type": "application/json"
-            },
-            url: url,
-            body: {
-                "name": "AutomationTestv1",
-	            "suiteType": "StaticTestSuite"
-            },
-            json: true
+        request.post({            
+            url: url            
         }, (error, response, body) => {
-            console.log(body);
+            if(!error && response.statusCode == 200) {
+                resolve(body.value);
+            } else {
+                reject(error);
+            }
         })
     });
+
 }
 
 app.listen(port, function(){
     console.log("server is up at " + port);
-    
-    
-    
 });
