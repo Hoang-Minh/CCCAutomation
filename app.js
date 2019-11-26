@@ -21,14 +21,7 @@ app.set("view engine", "ejs");
 
 const port = process.env.PORT || 3000;
 
-// let ids = [131658, 131660, 131659, 131661, 131662,131663, 131665, 131664, 131666, 131667,
-//             131670, 131668, 131676, 131673, 131599, 131606, 131567, 131565, 131569, 131570,
-//             131571, 131572, 131573, 131574, 131575, 131601, 131602, 131603, 131611, 131613];
-
-app.get("/test", function(req, res){
-    //GET https://dev.azure.com/{organization}/{project}/_apis/test/runs?buildUri={buildUri}&owner={owner}&tmiRunId={tmiRunId}&planId={planId}&includeRunDetails={includeRunDetails}&automated={automated}&$skip={$skip}&$top={$top}&api-version=5.0
-    //GET https://dev.azure.com/{organization}/{project}/_apis/test/runs?minLastUpdatedDate={minLastUpdatedDate}&maxLastUpdatedDate={maxLastUpdatedDate}&api-version=5.0
-
+app.get("/test", function(req, res){    
     let username = "mnguyen1";
     let password = process.env.API_KEY;
     let date = new Date();
