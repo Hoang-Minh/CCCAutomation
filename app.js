@@ -433,7 +433,7 @@ async function GetAllTestCasesInATestSuite(suite){
 }
 
 function CreateTestSuites(planId, suiteName){
-    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites?api-version=5.0";
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/121429?api-version=5.0";
     console.log(url);
     // let requestPromise = util.promisify(request);
     // let response = await requestPromise(url);
@@ -441,23 +441,19 @@ function CreateTestSuites(planId, suiteName){
 
     return new Promise((resolve, reject) => {
         request.post({
+            headers: {
+                "content-type": "application/json"
+            },
             url: url,
-            contentType: "application/json",
-            body: JSON.stringify({
-                "name": suiteName ,
-                "suiteType": "StaticTestSuite"
-            })
-        }, {
-            "name": suiteName,
-	        "suiteType": "StaticTestSuite"
+            body: {
+                "name": "AutomationTestv1",
+	            "suiteType": "StaticTestSuite"
+            },
+            json: true
         }, (error, response, body) => {
-            if(!error && response.statusCode == 200){
-                resolve(body);
-            } else {
-                reject(error);
-            }
-        });
-    })
+            console.log(body);
+        })
+    });
 }
 
 app.listen(port, function(){
