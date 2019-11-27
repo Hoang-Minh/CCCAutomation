@@ -134,11 +134,11 @@ app.get("/:planId/:mustTestPlanId/testsuites", async (req, res) => {
         let testSuite = testSuites.find(x => x.name == localIphone7TestSuiteIds[i].name);
         console.log(testSuite);
 
-        let testSuiteAndItsTestCases = await GetAllTestCasesInATestSuite(localIphone7TestSuiteIds[i]);
+        let testSuiteAndItsTestCases = await GetAllTestCasesInATestSuite(localIphone7TestSuiteIds[i], req.params.mustTestPlanId);
         console.log(testSuiteAndItsTestCases);
         console.log("test suite id that tests will be added: " + testSuite.id);
         console.log("test ids are added into test suite: " + testSuiteAndItsTestCases.ids);
-        await AddTestsIntoATestSuite(testSuite.id, testSuiteAndItsTestCases.ids);        
+        await AddTestsIntoATestSuite(testSuite.id, testSuiteAndItsTestCases.ids, req.params.mustTestPlanId);        
     }
 
     for(let i = 0; i < localIphone6TestSuiteIds.length; i++){
@@ -194,8 +194,8 @@ function CreateTestSuites(planId, parentTestSuite, suiteName){
     });
 }
 
-async function GetAllTestCasesInATestSuite(suite){
-    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + 80002 + "/suites/" + suite.id + "/testcases?api-version=5.0-preview.2";
+async function GetAllTestCasesInATestSuite(suite, mustTestPlanId){
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + mustTestPlanId + "/suites/" + suite.id + "/testcases?api-version=5.0-preview.2";
 
     let requestPromise = util.promisify(request);
     let response = await requestPromise(url);
@@ -218,8 +218,8 @@ async function GetAllTestCasesInATestSuite(suite){
     return rObj;
 }
 
-function AddTestsIntoATestSuite(suiteId, testCasesIds){
-    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + 80002 + "/suites/" + suiteId + "/testcases/"+ testCasesIds + "?api-version=5.0";
+function AddTestsIntoATestSuite(suiteId, testCasesIds, mustTestPlanId){
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + mustTestPlanId + "/suites/" + suiteId + "/testcases/"+ testCasesIds + "?api-version=5.0";
 
     return new Promise((resolve, reject) => {
         request.post({            
@@ -232,7 +232,22 @@ function AddTestsIntoATestSuite(suiteId, testCasesIds){
             }
         })
     });
+}
 
+function GetConfigurations(configurationName){
+    let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/testplan/configuration?api-version=5.1-preview.1";
+
+    return new Promise((resolve, reject) => {
+        request.get({
+            uri: url
+        }, (error, response, body) => {
+            if(!error && response.statusCode == 200) {
+                resolve(body.value);
+            } else {
+                reject(error);
+            }
+        })
+    })
 }
 
 app.listen(port, function(){
