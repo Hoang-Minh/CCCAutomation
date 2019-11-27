@@ -183,10 +183,7 @@ async function getAllTestSuitesInTestPlan(id){
 function createTestSuites(planId, parentTestSuite, suiteName){
     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/" + parentTestSuite + "?api-version=5.0";
 
-    console.log(url);
-    // let requestPromise = util.promisify(request);
-    // let response = await requestPromise(url);
-    // console.log(response.statusCode);    
+    console.log(url);   
 
     return new Promise((resolve, reject) => {
         request.post({
@@ -265,11 +262,6 @@ function getConfigurations(){
     })
 }
 
-
-app.get("/patch/testing", async (req, res) => {
-    let test = await updateConfiguration(121428, 154689, 131147, 56);
-})
-
 function updateConfiguration(planId, suiteId, testCaseIds, id){
     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/" + suiteId + "/testcases/" + testCaseIds + "?api-version=5.1";   
 
@@ -295,10 +287,7 @@ function updateConfiguration(planId, suiteId, testCaseIds, id){
     });
 }
 
-function deleteTestSuite(planId, suiteId){
-    //https://dev.azure.com/{{organization}}/{{project}}/_apis/testplan/Plans/{{planId}}/suites/{{suiteId}}?api-version=5.1-preview.1
-
-    //https://{{instance}}/{{collection}}/{{projectId}}/_apis/test/plans/{{planId}}/suites/{{suiteId}}?api-version={{api-version}}
+function deleteTestSuite(planId, suiteId){   
 
     let url = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/" + process.env.PROJECT_ID + "/_apis/test/plans/" + planId + "/suites/" + suiteId + "?api-version=5.0";
 
@@ -312,9 +301,7 @@ function deleteTestSuite(planId, suiteId){
                 reject(error);
             }
         });
-    });
-
-    
+    });    
 }
 
 app.listen(port, function(){
