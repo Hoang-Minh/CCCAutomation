@@ -5,19 +5,18 @@ const bodyParser = require("body-parser");
 const indexRoutes = require("./routes/index");
 const iosRoutes = require("./routes/ios");
 const androidRoutes = require("./routes/android");
+const releaseRoutes = require("./routes/release");
 const request = require("request");
 const util = require('util');
-//const cors = require("cors");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-//app.use(cors());
-
-// app.use(indexRoutes);
-// app.use("/ios", iosRoutes);
-// app.use("/android", androidRoutes);
+app.use(indexRoutes);
+app.use("/ios", iosRoutes);
+app.use("/android", androidRoutes);
+app.use("/release", releaseRoutes);
 
 const port = process.env.PORT || 3000;
 
