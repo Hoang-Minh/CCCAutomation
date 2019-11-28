@@ -107,10 +107,7 @@ app.get("/:planId/:mustTestPlanId/testsuites", async (req, res) => {
     if(typeof existingAutomatedTestSuite !== "undefined") {
         // delete existing test suite
         deleteTestSuite(req.params.planId, existingAutomatedTestSuite.id);
-    }
-
-    // delete existing testsuite
-    //let existing = 
+    }    
     
     let newlyCreatedAutomatedTestSuites = await createTestSuites(req.params.planId, parentTestSuite.id, automatedTestSuiteName);
 
