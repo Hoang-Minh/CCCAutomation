@@ -3,7 +3,7 @@ const router = express.Router();
 const release = require("../public/js/release");
 
 router.get("/", (req, res) => {
-    res.render("release");
+    res.render("release/release");
 });
 
 router.post("/", async (req, res) => {
@@ -80,12 +80,12 @@ router.post("/", async (req, res) => {
             populateTestForDevice(planId, mustTestPlanId, localTestSuiteIds, localTestSuite);
         }
 
-        res.send("Bingo");
-
+        req.flash("success", "Your request has been processed. Please allow 10-20 seconds for it to be done.")
+         res.redirect("back");
     } catch (error) {
         console.log(error);
         req.flash("error", "Something is wrong. Please try again");
-         res.redirect("back");
+        res.redirect("back");
     }
 })
 
