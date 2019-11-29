@@ -118,7 +118,7 @@ function promisify(url, message, method){
             uri: url,
             json: true
         }, (error, response, body) => {
-            if(!error || response.statusCode == 200 || response.statusCode == 204) {
+            if(!error) {
                 console.log(message + response.statusCode);
 
                 if(typeof body !== "undefined"){

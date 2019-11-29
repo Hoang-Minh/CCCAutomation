@@ -1,8 +1,6 @@
 $(function(){
-    window.setTimeout(function () {
-        $(".alert").fadeTo("slow", 0).slideUp(500, function () {
-            $(this).hide();
-        });
+    window.setTimeout(function(){
+        $(".alert").fadeOut("slow");
     }, 2000);
       
     //Get the forms we want to add validation styles to

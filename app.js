@@ -7,10 +7,25 @@ const iosRoutes = require("./routes/ios");
 const androidRoutes = require("./routes/android");
 const releaseRoutes = require("./routes/release");
 const request = require("request");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(flash());
+app.use(session({
+    secret: "I am Minh",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use((req, res, next) => {
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    next();
+});
+
 
 app.use(indexRoutes);
 app.use("/ios", iosRoutes);
