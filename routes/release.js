@@ -102,28 +102,10 @@ async function populateTestForDevice(planId, mustTestPlanId, deviceTestSuitesIds
         // 12. Get all the test cases in the sub test suite in the Automation Must Test plan
         let testSuiteAndItsTestCases = await release.getAllTestCasesInATestSuite(deviceTestSuitesIds[i], mustTestPlanId);
 
-        
-
+        // 13. Add tests with specified configuration into the test suite in release test plan
         for(let j = 0; j < testSuiteAndItsTestCases.length; j++) {
             await release.addTestsIntoATestSuite1(planId, testSuite.id, testSuiteAndItsTestCases[j].testCase.id, testSuiteAndItsTestCases[j].pointAssignments[0].configuration);
         }
-        
-        //testSuiteAndItsTestCases.forEach()
-        // test
-        //release.addTestsIntoATestSuite1(planId, testSuite.id, )
-
-        // console.log(testSuiteAndItsTestCases);
-
-        // // update from here !!!
-        // console.log(testSuiteAndItsTestCases);
-        // console.log("test suite id that tests will be added: " + testSuite.id);
-        // console.log("test ids are added into test suite: " + testSuiteAndItsTestCases.ids);
-        
-        // //13. Add tests into test suite
-        // await release.addTestsIntoATestSuite(planId, testSuite.id, testSuiteAndItsTestCases.ids);            
-        
-        // // 14. Update test configuration for test suite
-        // release.updateConfiguration(planId, testSuite.id, testSuiteAndItsTestCases.ids, configuration.id);
     }
 }
 
