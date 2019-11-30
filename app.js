@@ -9,6 +9,7 @@ const releaseRoutes = require("./routes/release");
 const request = require("request");
 const flash = require("connect-flash");
 const session = require("express-session");
+const util = require("util");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));

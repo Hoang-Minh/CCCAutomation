@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const release = require("../public/js/release");
+// const release = require("../public/js/release");
+const testSuite = require("../public/js/testSuite");
 
 router.get("/", (req, res) => {
     res.render("release/release");
@@ -12,8 +13,8 @@ router.post("/", async (req, res) => {
         let planId = req.body.release.releaseId;
         let mustTestPlanId = req.body.release.mustTestId;
 
-        // 1. Get All Test Suites in a test plan        
-        let allTestSuites = await release.getAllTestSuitesInTestPlan(planId);
+        // 1. Get All Test Suites in a Release Test plan        
+        let allTestSuites = await testSuite.getAllTestSuitesInTestPlan(planId);
 
         if(!allTestSuites){
             console.log("Release plan Id is invalid");
@@ -22,7 +23,7 @@ router.post("/", async (req, res) => {
         }
 
         // 2. Get All Test Suites in Automation Must Test Plan
-        let allTestSuitesInAutomationMustTest = await release.getAllTestSuitesInTestPlan(mustTestPlanId);
+        let allTestSuitesInAutomationMustTest = await testSuite.getAllTestSuitesInTestPlan(mustTestPlanId);
 
         if(!allTestSuitesInAutomationMustTest) {
             console.log("Automation Must Test Plan Id is invalid");
@@ -30,7 +31,7 @@ router.post("/", async (req, res) => {
             return res.redirect("back");
         }
 
-        // 3. Get parent Test Suite In Release Test Plan
+        // 3. Get parent Test Suite in Release Test Plan
         let parentTestSuite = allTestSuites
                 .find(x => x.inheritDefaultConfigurations === false 
                         && x.testCaseCount === 0 
@@ -52,11 +53,11 @@ router.post("/", async (req, res) => {
 
         // delete existing test suite
         for(let i = 0; i < existingAutomatedTestSuites.length; i++){
-            release.deleteTestSuite(planId, existingAutomatedTestSuites[i].id);
+            testSuite.deleteTestSuite(planId, existingAutomatedTestSuites[i].id);
         }        
 
-        // 5. Create Automation Must Test folder
-        let newlyCreatedAutomatedTestSuites = await release.createTestSuites(planId, parentTestSuite.id, automatedTestSuiteName);
+        // 5. Create Automation Must Test folder in Release Test plan
+        let newlyCreatedAutomatedTestSuites = await testSuite.createTestSuites(planId, parentTestSuite.id, automatedTestSuiteName);
 
         // 6. Get newly created folder in Release Test Plan
         let newlyCreatedAutomatedTestSuite = newlyCreatedAutomatedTestSuites.find(x => x.name == automatedTestSuiteName);        
@@ -70,8 +71,9 @@ router.post("/", async (req, res) => {
                                             && x.name.includes("LocalLab"));        
                                             
         for(let i = 0; i < testsuitesInAutomationMustTest.length; i++){
+
             // 8. Get all test suites in local lab
-            let localTestSuite = await release.createTestSuites(planId, newlyCreatedAutomatedTestSuite.id, testsuitesInAutomationMustTest[i].name);
+            let localTestSuite = await testSuite.createTestSuites(planId, newlyCreatedAutomatedTestSuite.id, testsuitesInAutomationMustTest[i].name);
 
             // 9. Get all Test Cases in Test Suite that is under Automation Must Test Plan
             let localTestSuiteIds = allTestSuitesInAutomationMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == testsuitesInAutomationMustTest[i].id);
@@ -87,25 +89,32 @@ router.post("/", async (req, res) => {
         req.flash("error", "Something is wrong. Please try again");
         res.redirect("back");
     }
-})
+});
 
+// router.post("/execute", async(req, res) => {
+//     let platform = req.body.platform;
+//     let releaseDefinitions = release.getAutomatedReleaseDefinitions(platform, "Local");
+
+    
+// });
 
 async function populateTestForDevice(planId, mustTestPlanId, deviceTestSuitesIds, deviceTestSuite){
 
-    for(let i = 0; i < deviceTestSuitesIds.length; i++){        
+    for(let i = 0; i < deviceTestSuitesIds.length; i++){       
+        console.log(testSuite); 
 
         // 11. Create all sub test suites in the Release plan 
-        let testSuites = await release.createTestSuites(planId, deviceTestSuite[0].id, deviceTestSuitesIds[i].name);
+        let testSuites = await testSuite.createTestSuites(planId, deviceTestSuite[0].id, deviceTestSuitesIds[i].name);
         console.log(testSuites);
         let testSuite = testSuites.find(x => x.name == deviceTestSuitesIds[i].name);
         console.log(testSuite);
         
         // 12. Get all the test cases in the sub test suite in the Automation Must Test plan
-        let testSuiteAndItsTestCases = await release.getAllTestCasesInATestSuite(deviceTestSuitesIds[i], mustTestPlanId);
+        let testSuiteAndItsTestCases = await testSuite.getAllTestCasesInATestSuite(deviceTestSuitesIds[i], mustTestPlanId);
 
         // 13. Add tests with specified configuration into the test suite in release test plan
         for(let j = 0; j < testSuiteAndItsTestCases.length; j++) {
-            await release.addTestsIntoATestSuite1(planId, testSuite.id, testSuiteAndItsTestCases[j].testCase.id, testSuiteAndItsTestCases[j].pointAssignments[0].configuration);
+            await testSuite.addTestsIntoATestSuite(planId, testSuite.id, testSuiteAndItsTestCases[j].testCase.id, testSuiteAndItsTestCases[j].pointAssignments[0].configuration);
         }
     }
 }
