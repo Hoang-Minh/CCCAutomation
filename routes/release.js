@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-//const release = require("../public/js/release");
 const testSuite = require("../public/js/testSuite");
 
 router.get("/", (req, res) => {
