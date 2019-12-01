@@ -79,4 +79,21 @@ testSuite.addTestsIntoATestSuite = (planId, suiteId, testCaseId, configuration) 
     return util.promisify(options, "Status code for adding Tests with specification:: ");    
 };
 
+testSuite.populateTestsForDevices = async (planId, mustTestPlanId, localTestSuiteIds, localTestSuite) => {
+    
+    for(let i = 0; i < localTestSuiteIds.length; i++){
+        // 11. Create all sub test suites in the Release plan 
+        let testSuites = await testSuite.createTestSuites(planId, localTestSuite[0].id, localTestSuiteIds[i].name);
+        let suite = testSuites.find(x => x.name === localTestSuiteIds[i].name);        
+
+        // 12. Get all the test cases in the sub test suite in the Automation Must Test plan
+        let testSuiteAndItsTestCases = await testSuite.getAllTestCasesInATestSuite(localTestSuiteIds[i], mustTestPlanId);
+
+        // 13. Add tests with specified configuration into the test suite in release test plan
+        for(let z = 0; z < testSuiteAndItsTestCases.length; z++) {
+            await testSuite.addTestsIntoATestSuite(planId, suite.id, testSuiteAndItsTestCases[z].testCase.id, testSuiteAndItsTestCases[z].pointAssignments[0].configuration);
+        }
+    }
+};
+
 module.exports = testSuite;
