@@ -5,27 +5,59 @@ $(document).ready(function(){
     let table = $("#tests").DataTable({
         data: agents,
         pageLength: 10, // show 25 entries
-        columns: [
+        columnDefs: [ 
             {
-                data: "name"                
+                "targets": 0,
+                data: "name",
+                render: function(data){                    
+                    return data;
+                }
             },
             {
-                data: "status"                            
+                "targets": 1,
+                data: "status",
+                render: function(data, type, row){
+                    if(data === "offline"){
+                        return "Offline";
+                    } else if(data === "online" && row.assignedRequest){
+                        return "Busy";
+                    } else {
+                        return "Available";
+                    }                    
+                }
             },
             {
-                data: "assignedRequest.planType"                            
-            },
-            {
+                "targets": 2,
                 data: "assignedRequest.assignTime",
-                render: function(arr){
-                    if(arr){
-                        return moment(arr).format("MMMM Do YYYY, h:mm:ss a");
+                render: function(data){
+                    if(data){
+                        return moment(data).fromNow();
                     }
-                    
+
                     return "N/A";
-                }               
-            }]
+                }
+            },
+            {
+                "targets": 3,
+                data: "assignedRequest.planType",       
+                render: function(data, type, row){
+                    return displayTaskDescription(data, type, row);
+                }
+            }                
+        ]
     });
+
+    function displayTaskDescription(data, type, row){
+        
+        if(data){
+            let task = "Running " + data + " " + row.assignedRequest.owner.name;
+            let description = task + "<div><small>" + row.assignedRequest.definition.name + "</small></div>";
+
+            return description;
+        }
+
+        return "N/A";
+    }
 
 
     // need to check if this works !!!
