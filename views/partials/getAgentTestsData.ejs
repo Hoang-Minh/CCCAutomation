@@ -2,7 +2,7 @@
 $(document).ready(function(){       
     let agents = <%- JSON.stringify(agents) %>;
     
-    let table = $("#tests").DataTable({
+    let table = $("#agents").DataTable({
         data: agents,
         pageLength: 10, // show 25 entries
         columnDefs: [ 
@@ -44,7 +44,14 @@ $(document).ready(function(){
                     return displayTaskDescription(data, type, row);
                 }
             }                
-        ]
+        ],
+        rowCallback: function(row, data) {
+            if (data.status === "offline") {
+                $(row).addClass("table-danger");
+            } else if (data.status === "online" && data.assignedRequest){
+                $(row).addClass("table-primary");
+            }
+        }
     });
 
     function displayTaskDescription(data, type, row){
