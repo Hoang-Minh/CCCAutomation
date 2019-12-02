@@ -15,17 +15,20 @@
             <h1 class="text-info text-center"><span class="text-uppercase">Agent Pool Name</span></h1>  
         </div>
         <table id="tests" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <!-- <th>Running</th>                         -->
-                    </tr>
-                </thead>
-                <tbody></tbody>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Task</th>
+                    <th>Assign Time</th>
+                </tr>
+            </thead>                     
         </table>
 
     </div>
 </div>
-<% include ../partials/footer %>
+
+<% include ../partials/script %>
 <%- include("../partials/getAgentTestsData", {agents : agents}) %>
+</body>
+</html>

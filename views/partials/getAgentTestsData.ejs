@@ -1,17 +1,38 @@
 <script>
 $(document).ready(function(){       
-    let agents = <%- JSON.stringify(agents) %>;    
-
+    let agents = <%- JSON.stringify(agents) %>;
+    
     let table = $("#tests").DataTable({
         data: agents,
-        pageLength: 25, // show 25 entries
+        pageLength: 10, // show 25 entries
         columns: [
             {
                 data: "name"                
             },
             {
-                data: "status"            
+                data: "status"                            
+            },
+            {
+                data: "assignedRequest.planType"                            
+            },
+            {
+                data: "assignedRequest.assignTime",
+                render: function(arr){
+                    if(arr){
+                        return moment(arr).format("MMMM Do YYYY, h:mm:ss a");
+                    }
+                    
+                    return "N/A";
+                }               
             }]
     });
+
+
+    // need to check if this works !!!
+    setInterval( function () {
+        $.get("/agent", () => {
+            console.log("refresh data");
+        });
+    }, 30000);
 });
 </script>

@@ -8,6 +8,10 @@ let baseUrl = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@
 
 //let baseUrl = "https://" + process.env.USERNAME + process.env.AZURE + "/" + process.env.ORGANIZATION + "/_apis/distributedtask/pools";
 
+agent.getUrl = () => {
+    return baseUrl + "?poolName=" + process.env.AGENT_POOL_NAME + "&api-version=5.1";
+}
+
 agent.getAgentPoolName = (agentPoolName) => {
 
     let url = baseUrl + "?poolName=" + process.env.AGENT_POOL_NAME + "&api-version=5.1";
@@ -23,7 +27,7 @@ agent.getAgentPoolName = (agentPoolName) => {
 
 agent.getAgents = (agentPoolNameId) => {
     //https://{{coreServer}}/{{organization}}/_apis/distributedtask/pools/{{poolId}}/agents?api-version=5.1
-    let url = baseUrl + "/" + agentPoolNameId + "/agents?api-version=5.1";
+    let url = baseUrl + "/" + agentPoolNameId + "/agents?includeAssignedRequest=true&includeLastCompletedRequest=true&api-version=5.1";
 
     let options = {
         url: url,
