@@ -1,0 +1,17 @@
+<script>
+$(document).ready(function(){       
+    let agents = <%- JSON.stringify(agents) %>;    
+
+    let table = $("#tests").DataTable({
+        data: agents,
+        pageLength: 25, // show 25 entries
+        columns: [
+            {
+                data: "name"                
+            },
+            {
+                data: "status"            
+            }]
+    });
+});
+</script>

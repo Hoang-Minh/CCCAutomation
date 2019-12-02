@@ -24,8 +24,15 @@
                 <th>Description</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Manual Ids</th>
+                <th>Automation Ids</th>
+                <th>Description</th>
+            </tr>
+        </thead>
     </table>
 </div>
 <% include footer %>
-<%- include("getData", {url: url, edit: edit}) %>
+<%- include("getAutomationTestsData", {url: url, edit: edit}) %>

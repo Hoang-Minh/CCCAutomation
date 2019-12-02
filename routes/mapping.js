@@ -3,14 +3,14 @@ const router = express.Router();
 const testSuite = require("../public/js/testSuite");
 
 router.get("/", (req, res) => {
-    res.render("release/release");
+    res.render("mapping/mapping");
 });
 
 router.post("/", async (req, res) => {
     try {
         
-        let planId = req.body.release.releaseId;
-        let mustTestPlanId = req.body.release.mustTestId;
+        let planId = req.body.mapping.releaseId;
+        let mustTestPlanId = req.body.mapping.mustTestId;
 
         // 1. Get All Test Suites in a Release Test plan        
         let allTestSuites = await testSuite.getAllTestSuitesInTestPlan(planId);

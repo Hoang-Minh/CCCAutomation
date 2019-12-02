@@ -6,6 +6,8 @@ const indexRoutes = require("./routes/index");
 const iosRoutes = require("./routes/ios");
 const androidRoutes = require("./routes/android");
 const releaseRoutes = require("./routes/release");
+const mappingRoutes = require("./routes/mapping");
+const agentRoutes = require("./routes/agent");
 const request = require("request");
 const flash = require("connect-flash");
 const session = require("express-session");
@@ -31,7 +33,9 @@ app.use((req, res, next) => {
 app.use(indexRoutes);
 app.use("/ios", iosRoutes);
 app.use("/android", androidRoutes);
+app.use("/mapping", mappingRoutes);
 app.use("/release", releaseRoutes);
+app.use("/agent", agentRoutes);
 
 const port = process.env.PORT || 3000;
 

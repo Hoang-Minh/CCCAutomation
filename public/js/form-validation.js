@@ -1,7 +1,7 @@
 $(function(){
     window.setTimeout(function(){
         $(".alert").fadeOut("slow");
-    }, 2000);
+    }, 5000);
       
     //Get the forms we want to add validation styles to
     let forms = document.getElementsByClassName("needs-validation");

@@ -1,7 +1,5 @@
 const request = require("request");
 
-
-
 let release = {};
 
 release.getAutomatedReleaseDefinitions = (platform, type) => {
