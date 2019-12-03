@@ -1,10 +1,11 @@
 <script>
-$(document).ready(function(){       
-    let agents = <%- JSON.stringify(agents) %>;
-    
-    let table = $("#agents").DataTable({
-        data: agents,
-        pageLength: 10, // show 25 entries
+$(document).ready(function(){
+    let agents = $("#agents").DataTable({
+        ajax: {
+            url: "/agent/findAll",
+            dataSrc: ""
+        },
+        pageLength: 10, // show 10 entries
         columnDefs: [ 
             {
                 "targets": 0,
@@ -45,6 +46,7 @@ $(document).ready(function(){
                 }
             }                
         ],
+        order: [[ 1, "desc" ]],
         rowCallback: function(row, data) {
             if (data.status === "offline") {
                 $(row).addClass("table-danger");
@@ -66,12 +68,9 @@ $(document).ready(function(){
         return "N/A";
     }
 
-
-    // need to check if this works !!!
+    // auto refresh page after 30 secs
     setInterval( function () {
-        $.get("/agent", () => {
-            console.log("refresh data");
-        });
+        agents.ajax.reload(null, false);
     }, 30000);
 });
 </script>
