@@ -46,7 +46,7 @@ $(document).ready(function(){
                 }
             }                
         ],
-        order: [[ 1, "desc" ]],
+        order: [[ 1, "desc" ]], // so offline and busy will be displayed before available
         rowCallback: function(row, data) {
             if (data.status === "offline") {
                 $(row).addClass("table-danger");
