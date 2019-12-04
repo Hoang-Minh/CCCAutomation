@@ -32,7 +32,7 @@ $(document).ready(function(){
                 data: "assignedRequest.assignTime",
                 render: function(data){
                     if(data){
-                        return moment(data).fromNow();
+                        return moment(data).format("lll");
                     }
 
                     return "N/A";
