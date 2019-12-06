@@ -96,4 +96,26 @@ testSuite.populateTestsForDevices = async (planId, mustTestPlanId, localTestSuit
     }
 };
 
+testSuite.deepClone = (fromTestSuiteId, toTestSuiteId) => {
+    let url = baseUrl + "/testplan/Suites/CloneOperation?api-version=5.1-preview.2";
+
+    let options = {
+        url: url,
+        method: "POST",
+        body: {
+            "cloneOptions": {
+                "copyAllSuites": true
+            },
+            "destinationTestSuite": {
+                "id": toTestSuiteId
+            },
+            "sourceTestSuite": {
+                "id": fromTestSuiteId
+            }
+        },
+        json: true
+    };
+
+    return util.promisify(options, "Status code for deep cloning test suite: ");
+}
 module.exports = testSuite;

@@ -9,3 +9,5 @@ router.get("/", async (req, res) => {
     let agents = await agent.getAgents(id);
     res.send(agents);
 })
+
+module.exports = router;

@@ -7,13 +7,12 @@ const iosRoutes = require("./routes/ios");
 const androidRoutes = require("./routes/android");
 const releaseRoutes = require("./routes/release");
 const mappingRoutes = require("./routes/mapping");
-const agentRoutes = require("./routes/agent");
-const agentApiRoutes = require("./routes/api/agent");
+const agentRoutes = require("./routes/agents");
+const agentApiRoutes = require("./routes/api/agents");
 const dashboardRoutes = require("./routes/dashboard");
 const request = require("request");
 const flash = require("connect-flash");
 const session = require("express-session");
-const util = require("util");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -40,8 +39,9 @@ app.use("/android", androidRoutes);
 app.use("/mapping", mappingRoutes);
 app.use("/release", releaseRoutes);
 app.use("/agent", agentRoutes);
-app.use("/api/agents", agentApiRoutes);
 app.use("/dashboard", dashboardRoutes);
+
+app.use("/api/agents", agentApiRoutes);
 
 const port = process.env.PORT || 3000;
 

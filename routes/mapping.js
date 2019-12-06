@@ -3,15 +3,6 @@ const router = express.Router();
 const testSuite = require("../public/js/testSuite");
 
 router.get("/", (req, res) => {
-    let releaseName = "RF iOS v19.24 - Photo Analytics Event Updates";
-    let pattern = /(iOS|Android)/g;
-    let s = releaseName.match(pattern);
-    console.log(s[0]);
-
-    let mustTest = "iOS Must Tests";
-    let s1 = mustTest.match(pattern);
-    console.log(s1[0]);
-
     res.render("mapping/mapping");
 });
 
@@ -53,30 +44,33 @@ router.post("/", async (req, res) => {
         let parentTestSuiteNameInRelease = parentTestSuite.name; // get parentTestSuiteName in Release Test Plan
         let parentTestSuiteNameInAutomation = parentTestSuiteInAutomation.name;
         
-        let pattern = /(iOS|Android)/g;
-        let platformInReleaseTestPlan = releaseName.match(pattern);
+        let platformPattern = /(iOS|Android)/g;
+        let platformInReleaseTestPlan = parentTestSuiteNameInRelease.match(platformPattern);
         
         if(!platformInReleaseTestPlan) {
-            console.log("Platform in Release Test Plan is invalid");
-            req.flash("error", "Platform in Release Test Plan is invalid");
+            let error = "Platform in Release Test Plan is invalid";
+            console.log(error);
+            req.flash("error", error);
             return res.redirect("back");
         }
         console.log("Platform in Release Test Plan: " + platformInReleaseTestPlan[0]);
 
-
-        let platformInMustTestPlan = parentTestSuiteNameInAutomation.match(pattern);        
+        let platformInMustTestPlan = parentTestSuiteNameInAutomation.match(platformPattern);        
 
         if(!platformInMustTestPlan) {
-            console.log("Platform in Must Test Plan is invalid");
-            req.flash("error", "Platform in Must Test Plan is invalid");
-            return res.redirect("back");
+            let error = "Platform in Must Test Plan is invalid";
+            console.log(error);
+            req.flash("error", error);
+            return res.redirect("back");            
         }
         console.log("Platform in Must Test Plan: " + platformInMustTestPlan[0]);
 
         // need a smart check
         if(platformInReleaseTestPlan[0] !== platformInMustTestPlan[0]){
-            console.log("Test Plan Ids do not match");
-            req.flash("error", "Test Plan Ids do not match");
+            let error = `Release Test Plan is ${platformInReleaseTestPlan[0]} while Automation Must Test Plan is ${platformInMustTestPlan[0]}. Please check your plan Id`;
+
+            console.log(error);
+            req.flash("error", error);
             return res.redirect("back");
         }
         
@@ -96,10 +90,10 @@ router.post("/", async (req, res) => {
         // delete existing test suite
         for(let i = 0; i < existingAutomatedTestSuites.length; i++){
             testSuite.deleteTestSuite(planId, existingAutomatedTestSuites[i].id);
-        }        
-
+        }
+        
         // 5. Create Automation Must Test folder in Release Test plan
-        let newlyCreatedAutomatedTestSuites = await testSuite.createTestSuites(planId, parentTestSuite.id, automatedTestSuiteName);
+        let newlyCreatedAutomatedTestSuites = await testSuite.createTestSuites(planId, parentTestSuite.id, automatedTestSuiteName);        
 
         // 6. Get newly created folder in Release Test Plan
         let newlyCreatedAutomatedTestSuite = newlyCreatedAutomatedTestSuites.find(x => x.name == automatedTestSuiteName);
@@ -112,19 +106,12 @@ router.post("/", async (req, res) => {
                                             && x.hasOwnProperty("parent")
                                             && x.name.includes("LocalLab"));        
                                             
-        for(let i = 0; i < testsuitesInAutomationMustTest.length; i++){
-
-            // 8. Get all test suites in local lab
-            let localTestSuite = await testSuite.createTestSuites(planId, newlyCreatedAutomatedTestSuite.id, testsuitesInAutomationMustTest[i].name);
-
-            // 9. Get all Test Cases in Test Suite that is under Automation Must Test Plan
-            let localTestSuiteIds = allTestSuitesInAutomationMustTest.filter(x => x.hasOwnProperty("parent") && x.parent.id == testsuitesInAutomationMustTest[i].id);
-
-            // 10. Add Tests into each suite in Release Test Plan
-            testSuite.populateTestsForDevices(planId, mustTestPlanId, localTestSuiteIds, localTestSuite);
+        for(let i = 0; i < testsuitesInAutomationMustTest.length; i++){                        
+            // 8. clone
+            testSuite.deepClone(testsuitesInAutomationMustTest[i].id, newlyCreatedAutomatedTestSuite.id);
         }
 
-        req.flash("success", "Your request has been processed. Please allow 10-20 seconds for it to be done.")
+        req.flash("success", "Your request has been processed.")
         res.redirect("back");
 
     } catch (error) {
