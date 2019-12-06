@@ -3,6 +3,15 @@ const router = express.Router();
 const testSuite = require("../public/js/testSuite");
 
 router.get("/", (req, res) => {
+    let releaseName = "RF iOS v19.24 - Photo Analytics Event Updates";
+    let pattern = /(iOS|Android)/g;
+    let s = releaseName.match(pattern);
+    console.log(s[0]);
+
+    let mustTest = "iOS Must Tests";
+    let s1 = mustTest.match(pattern);
+    console.log(s1[0]);
+
     res.render("mapping/mapping");
 });
 
@@ -43,8 +52,29 @@ router.post("/", async (req, res) => {
                         && !x.hasOwnProperty("parent"));
         let parentTestSuiteNameInRelease = parentTestSuite.name; // get parentTestSuiteName in Release Test Plan
         let parentTestSuiteNameInAutomation = parentTestSuiteInAutomation.name;
+        
+        let pattern = /(iOS|Android)/g;
+        let platformInReleaseTestPlan = releaseName.match(pattern);
+        
+        if(!platformInReleaseTestPlan) {
+            console.log("Platform in Release Test Plan is invalid");
+            req.flash("error", "Platform in Release Test Plan is invalid");
+            return res.redirect("back");
+        }
+        console.log("Platform in Release Test Plan: " + platformInReleaseTestPlan[0]);
 
-        if(!parentTestSuiteNameInRelease.includes(parentTestSuiteNameInAutomation)){
+
+        let platformInMustTestPlan = parentTestSuiteNameInAutomation.match(pattern);        
+
+        if(!platformInMustTestPlan) {
+            console.log("Platform in Must Test Plan is invalid");
+            req.flash("error", "Platform in Must Test Plan is invalid");
+            return res.redirect("back");
+        }
+        console.log("Platform in Must Test Plan: " + platformInMustTestPlan[0]);
+
+        // need a smart check
+        if(platformInReleaseTestPlan[0] !== platformInMustTestPlan[0]){
             console.log("Test Plan Ids do not match");
             req.flash("error", "Test Plan Ids do not match");
             return res.redirect("back");
