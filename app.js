@@ -8,6 +8,7 @@ const androidRoutes = require("./routes/android");
 const releaseRoutes = require("./routes/release");
 const mappingRoutes = require("./routes/mapping");
 const agentRoutes = require("./routes/agent");
+const agentApiRoutes = require("./routes/api/agent");
 const dashboardRoutes = require("./routes/dashboard");
 const request = require("request");
 const flash = require("connect-flash");
@@ -39,6 +40,7 @@ app.use("/android", androidRoutes);
 app.use("/mapping", mappingRoutes);
 app.use("/release", releaseRoutes);
 app.use("/agent", agentRoutes);
+app.use("/api/agents", agentApiRoutes);
 app.use("/dashboard", dashboardRoutes);
 
 const port = process.env.PORT || 3000;

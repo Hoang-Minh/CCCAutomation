@@ -2,7 +2,7 @@
 $(document).ready(function(){
     let agents = $("#agents").DataTable({
         ajax: {
-            url: "/agent/findAll",
+            url: "/api/agents",
             dataSrc: ""
         },
         pageLength: 10, // show 10 entries
