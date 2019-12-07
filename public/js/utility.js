@@ -7,10 +7,7 @@ util.promisify = (options, message) => {
         request(options, (error, response, body) => {
             if(!error) {
                 console.log(message + response.statusCode);
-
-                if(typeof body !== "undefined"){
-                    resolve(body.value);
-                }
+                resolve(body);
             } else {
                 reject(error);
             }

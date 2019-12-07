@@ -76,7 +76,7 @@ testSuite.addTestsIntoATestSuite = (planId, suiteId, testCaseId, configuration) 
         json: true
     };
 
-    return util.promisify(options, "Status code for adding Tests with specification:: ");    
+    return util.promisify(options, "Status code for adding Tests with specification: ");    
 };
 
 testSuite.populateTestsForDevices = async (planId, mustTestPlanId, localTestSuiteIds, localTestSuite) => {
@@ -96,7 +96,7 @@ testSuite.populateTestsForDevices = async (planId, mustTestPlanId, localTestSuit
     }
 };
 
-testSuite.deepClone = (fromTestSuiteId, toTestSuiteId) => {
+testSuite.deepClone = (fromTestSuite, toTestSuite) => {
     let url = baseUrl + "/testplan/Suites/CloneOperation?api-version=5.1-preview.2";
 
     let options = {
@@ -107,15 +107,15 @@ testSuite.deepClone = (fromTestSuiteId, toTestSuiteId) => {
                 "copyAllSuites": true
             },
             "destinationTestSuite": {
-                "id": toTestSuiteId
+                "id": toTestSuite.id
             },
             "sourceTestSuite": {
-                "id": fromTestSuiteId
+                "id": fromTestSuite.id
             }
         },
         json: true
     };
 
-    return util.promisify(options, "Status code for deep cloning test suite: ");
+    return util.promisify(options, `Status code for deep cloning test suite ${fromTestSuite.name}: `);
 }
 module.exports = testSuite;

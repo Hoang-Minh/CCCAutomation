@@ -13,8 +13,8 @@ router.post("/", async (req, res) => {
         let mustTestPlanId = req.body.mapping.mustTestId;
 
         // 1. Get All Test Suites in a Release Test plan        
-        let allTestSuites = await testSuite.getAllTestSuitesInTestPlan(planId);
-
+        let allTestSuites = (await testSuite.getAllTestSuitesInTestPlan(planId)).value;        
+        
         if(!allTestSuites){
             console.log("Release plan Id is invalid");
             req.flash("error", "Release plan Id is invalid");
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
         }
 
         // 2. Get All Test Suites in Automation Must Test Plan
-        let allTestSuitesInAutomationMustTest = await testSuite.getAllTestSuitesInTestPlan(mustTestPlanId);
+        let allTestSuitesInAutomationMustTest = (await testSuite.getAllTestSuitesInTestPlan(mustTestPlanId)).value;
 
         if(!allTestSuitesInAutomationMustTest) {
             console.log("Automation Must Test Plan Id is invalid");
@@ -65,7 +65,7 @@ router.post("/", async (req, res) => {
         }
         console.log("Platform in Must Test Plan: " + platformInMustTestPlan[0]);
 
-        // need a smart check
+        // check if platform (ios or android) are the same in release and automation must test plan
         if(platformInReleaseTestPlan[0] !== platformInMustTestPlan[0]){
             let error = `Release Test Plan is ${platformInReleaseTestPlan[0]} while Automation Must Test Plan is ${platformInMustTestPlan[0]}. Please check your plan Id`;
 
@@ -88,12 +88,10 @@ router.post("/", async (req, res) => {
                         && x.name.includes(prefixAutomatedMustTest));
 
         // delete existing test suite
-        for(let i = 0; i < existingAutomatedTestSuites.length; i++){
-            testSuite.deleteTestSuite(planId, existingAutomatedTestSuites[i].id);
-        }
+        existingAutomatedTestSuites.forEach(x => testSuite.deleteTestSuite(planId, x.id));
         
         // 5. Create Automation Must Test folder in Release Test plan
-        let newlyCreatedAutomatedTestSuites = await testSuite.createTestSuites(planId, parentTestSuite.id, automatedTestSuiteName);        
+        let newlyCreatedAutomatedTestSuites = (await testSuite.createTestSuites(planId, parentTestSuite.id, automatedTestSuiteName)).value;        
 
         // 6. Get newly created folder in Release Test Plan
         let newlyCreatedAutomatedTestSuite = newlyCreatedAutomatedTestSuites.find(x => x.name == automatedTestSuiteName);
@@ -105,11 +103,16 @@ router.post("/", async (req, res) => {
                                             && x.testCaseCount === 0 
                                             && x.hasOwnProperty("parent")
                                             && x.name.includes("LocalLab"));        
-                                            
-        for(let i = 0; i < testsuitesInAutomationMustTest.length; i++){                        
-            // 8. clone
-            testSuite.deepClone(testsuitesInAutomationMustTest[i].id, newlyCreatedAutomatedTestSuite.id);
-        }
+        // 8. clone
+        testsuitesInAutomationMustTest.forEach(x => {
+            testSuite.deepClone(x, newlyCreatedAutomatedTestSuite)
+                                    .then(response => {
+                                        console.log(`State of clone operation response: ${response.cloneOperationResponse.state}`);
+                                    })
+                                    .catch(error => {
+                                        console.log(error);
+                                    });            
+        });        
 
         req.flash("success", "Your request has been processed.")
         res.redirect("back");
