@@ -3,11 +3,12 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const indexRoutes = require("./routes/index");
-const iosRoutes = require("./routes/ios");
-const androidRoutes = require("./routes/android");
+const automationTestsRoutes = require("./routes/automationTests");
 const releaseRoutes = require("./routes/release");
 const mappingRoutes = require("./routes/mapping");
 const agentRoutes = require("./routes/agents");
+
+const automationTestApiRoutes = require("./routes/api/automationTests");
 const agentApiRoutes = require("./routes/api/agents");
 const dashboardRoutes = require("./routes/dashboard");
 const request = require("request");
@@ -34,13 +35,13 @@ app.use((req, res, next) => {
 
 
 app.use(indexRoutes);
-app.use("/ios", iosRoutes);
-app.use("/android", androidRoutes);
+app.use("/platform", automationTestsRoutes);
 app.use("/mapping", mappingRoutes);
 app.use("/release", releaseRoutes);
 app.use("/agent", agentRoutes);
 app.use("/dashboard", dashboardRoutes);
-
+    
+app.use("/api/tests", automationTestApiRoutes);
 app.use("/api/agents", agentApiRoutes);
 
 const port = process.env.PORT || 3000;

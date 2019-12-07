@@ -5,6 +5,10 @@ $(document).ready(function(){
             url: "/api/agents",
             dataSrc: ""
         },
+        processing: true,
+        language: {
+            processing: '<i class="spinner-border text-muted"></i><span> Loading...</span> '
+        },
         pageLength: 10, // show 10 entries
         columnDefs: [ 
             {

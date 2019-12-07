@@ -1,13 +1,17 @@
 <script>
-$(document).ready(function(){       
+$(document).ready(function(){
     let url = <%- JSON.stringify(url) %>;
     let edit = <%- JSON.stringify(edit) %>;
-
+    
     let table = $("#tests").DataTable({
     ajax: {
         url: url,
         dataSrc: ""
     },        
+    processing: true,
+    language: {
+        processing: '<i class="spinner-border text-muted"></i><span> Loading...</span> '
+    },
     pageLength: 25, // show 25 entries
     columns: [
         {

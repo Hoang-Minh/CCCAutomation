@@ -4,7 +4,7 @@ const moment = require("moment");
 const utility = require
 
 router.get("/", (req, res) => {
-    res.render("/dashboard/dashboard");
+    res.render("dashboard/dashboard");
 });
 
 router.get("/android-must-test", async (req, res) => {
