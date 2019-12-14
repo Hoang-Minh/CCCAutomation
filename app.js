@@ -6,10 +6,14 @@ const indexRoutes = require("./routes/index");
 const automationTestsRoutes = require("./routes/automationTests");
 const releaseRoutes = require("./routes/release");
 const mappingRoutes = require("./routes/mapping");
+<<<<<<< HEAD
 const agentRoutes = require("./routes/agents");
 
 const automationTestApiRoutes = require("./routes/api/automationTests");
 const agentApiRoutes = require("./routes/api/agents");
+=======
+const agentRoutes = require("./routes/agent");
+>>>>>>> 8b36f80ec1e7807ab125f0ed34ab6032a2d3ed06
 const dashboardRoutes = require("./routes/dashboard");
 const request = require("request");
 const flash = require("connect-flash");
@@ -40,9 +44,12 @@ app.use("/mapping", mappingRoutes);
 app.use("/release", releaseRoutes);
 app.use("/agent", agentRoutes);
 app.use("/dashboard", dashboardRoutes);
+<<<<<<< HEAD
     
 app.use("/api/tests", automationTestApiRoutes);
 app.use("/api/agents", agentApiRoutes);
+=======
+>>>>>>> 8b36f80ec1e7807ab125f0ed34ab6032a2d3ed06
 
 const port = process.env.PORT || 3000;
 
