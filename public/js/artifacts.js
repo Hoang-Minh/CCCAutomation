@@ -4,7 +4,7 @@ let artifacts = {};
 
 let baseUrl = "https://" + process.env.USERNAME + ":" + process.env.API_KEY + "@dev.azure.com/" + process.env.ORGANIZATION + "/_apis/build/builds/99180/artifacts";
 
-artifacts.getArtifact = () => {
+artifacts.getCCCOneArtifact = () => {
     let url = baseUrl + "?artifactName=CCCONE&api-version=5.1";
 
     let options = {
